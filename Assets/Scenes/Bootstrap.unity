@@ -119,57 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &530975461
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 530975462}
-  - component: {fileID: 530975463}
-  m_Layer: 2
-  m_Name: LanDiscoveryClient
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
---- !u!4 &530975462
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 530975461}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &530975463
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 530975461}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ce72f8c7b8dac7438dd344210638d24, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LanDiscovery
-  role: 1
-  discoveryPort: 47777
-  magic: NGO_DISCOVERY_V1
-  broadcastIntervalMs: 1000
-  hostTtlSeconds: 5
-  gameName: Ma Partie
-  gamePortOverride: 0
 --- !u!1 &777381817
 GameObject:
   m_ObjectHideFlags: 0
@@ -275,7 +224,7 @@ MonoBehaviour:
     OldPrefabList: []
   RunInBackground: 1
   LogLevel: 1
---- !u!1 &1913151192
+--- !u!1 &1029791268
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -283,53 +232,46 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1913151193}
-  - component: {fileID: 1913151194}
-  m_Layer: 2
-  m_Name: LanDiscoveryHost
+  - component: {fileID: 1029791269}
+  - component: {fileID: 1029791270}
+  m_Layer: 0
+  m_Name: LoadScene
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1913151193
+--- !u!4 &1029791269
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1913151192}
+  m_GameObject: {fileID: 1029791268}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0, y: 0, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1913151194
+--- !u!114 &1029791270
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1913151192}
+  m_GameObject: {fileID: 1029791268}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ce72f8c7b8dac7438dd344210638d24, type: 3}
+  m_Script: {fileID: 11500000, guid: aa7b530ec80b9694db13a1c1f3f68e18, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LanDiscovery
-  role: 0
-  discoveryPort: 47777
-  magic: NGO_DISCOVERY_V1
-  broadcastIntervalMs: 1000
-  hostTtlSeconds: 5
-  gameName: Ma Partie
-  gamePortOverride: 0
+  m_EditorClassIdentifier: Assembly-CSharp::SceneLoader
+  sceneToLoad: Main_Scene
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 777381818}
-  - {fileID: 1913151193}
-  - {fileID: 530975462}
+  - {fileID: 1029791269}

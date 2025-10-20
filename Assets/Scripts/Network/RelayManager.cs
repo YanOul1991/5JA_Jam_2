@@ -15,37 +15,58 @@ using Unity.Networking.Transport;
 using Unity.Networking.Transport.Relay;
 using NetworkEvent = Unity.Networking.Transport.NetworkEvent;
 using TMPro;
+using UnityEngine.UI;
 
 public class RelayManager : MonoBehaviour
 {
   public static RelayManager instance;
-  const int m_MaxConnections = 1; // Celui qui �tabli le relais compte d��
+  const int m_MaxConnections = 1;
   public string RelayJoinCode;
 
-  private Allocation allocation; // ajout, diff�rent du tuto
-  private JoinAllocation joinAllocation; // ajout, diff�rent du tuto
+  private Allocation allocation;
+  private JoinAllocation joinAllocation;
 
   [SerializeField] private TextMeshProUGUI joinCodeText;
   [SerializeField] private TMP_InputField joinCodeInputField;
 
+  [SerializeField] private Button btnStartHost;
+  [SerializeField] private Button btnStartClient;
 
   void Awake()
   {
-    if (instance == null)
-    {
-      instance = this;
-    }
-    else
-    {
-      Destroy(gameObject);
-    }
+    if (instance == null) instance = this;
+    else Destroy(gameObject);
   }
 
   void Start()
   {
     AuthenticatePlayer();
+    btnStartHost.onClick.AddListener(OnStartHostClick);
+    btnStartClient.onClick.AddListener(OnStartClientClick);
   }
 
+  private void OnStartHostClick()
+  {
+    Debug.Log($"Starting host...");
+    btnStartHost.onClick.RemoveListener(OnStartHostClick);
+    btnStartClient.onClick.RemoveListener(OnStartClientClick);
+    StartCoroutine(ConfigureTransportAndStartNgoAsHost());
+  }
+
+  private void OnStartClientClick()
+  {
+    Debug.Log($"Starting as client...");
+    btnStartHost.onClick.RemoveListener(OnStartHostClick);
+    btnStartClient.onClick.RemoveListener(OnStartClientClick);
+    joinCodeInputField.onEndEdit.AddListener(ConfigureClientStart);
+  }
+
+  private void ConfigureClientStart(string value)
+  {
+    joinCodeInputField.onEndEdit.RemoveListener(ConfigureClientStart);
+    StartCoroutine(ConfigureTransportAndStartNgoAsConnectingPlayer());
+  }
+  
   async void AuthenticatePlayer()
   {
     try
@@ -59,8 +80,8 @@ public class RelayManager : MonoBehaviour
       Debug.LogException(e);
     }
   }
-
-  // diff�rent du tuto : task de type string
+  
+  // ///////////////////////////////// HOST SERVER CONNECTION
   public async Task<string> AllocateRelayServerAndGetJoinCode(int maxConnections, string region = null)
   {
     string createJoinCode;
@@ -113,6 +134,7 @@ public class RelayManager : MonoBehaviour
     yield return null;
   }
 
+  // ///////////////////////////////// CLIENT SERVER CONNECTION
   public async Task<JoinAllocation> JoinRelayServerFromJoinCode(string joincode)
   {
 
@@ -136,21 +158,21 @@ public class RelayManager : MonoBehaviour
 
   public IEnumerator ConfigureTransportAndStartNgoAsConnectingPlayer()
   {
-    var clientRelayUtilityTask = JoinRelayServerFromJoinCode(joinCodeInputField.text);
+    // Start a JoinRelayServerFromJoinCode Task from the given join code in the input field
+    Task<JoinAllocation> clientRelayUtilityTask = JoinRelayServerFromJoinCode(joinCodeInputField.text);
 
-    while (!clientRelayUtilityTask.IsCompleted)
-    {
-      yield return null;
-    }
+    // Wait for task to complete
+    while (!clientRelayUtilityTask.IsCompleted) yield return null;
 
+    // Display Error
     if (clientRelayUtilityTask.IsFaulted)
     {
       Debug.LogError("Exception thrown when attempting to connect to Relay Server. Exception: " + clientRelayUtilityTask.Exception.Message);
       yield break;
     }
 
-    var relayServerData = clientRelayUtilityTask.Result;
-
+    // var relayServerData = clientRelayUtilityTask.Result;
+    // Join sever and connect as client
     NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(AllocationUtils.ToRelayServerData(joinAllocation, "dtls"));
     NetworkManager.Singleton.StartClient();
     yield return null;
