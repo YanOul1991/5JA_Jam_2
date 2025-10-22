@@ -16,7 +16,7 @@ enum Value
     Count
 }
 
-struct Card
+class Card
 {
     public Value value;
     public Symbol symbol;

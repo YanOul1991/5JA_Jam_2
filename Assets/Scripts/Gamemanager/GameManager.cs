@@ -41,17 +41,20 @@ public class GameManager : MonoBehaviour
 
         shownCards = new List<Card>();
         hiddenCards = new List<Card>();
+
+        for (int i = 0; i < 9; i++)
+        {
+            hiddenCards.Add(activeCards[i]);
+        }
+
         for (int i = 0; i < 4; i++)
         {
             int index = Random.Range(0, activeCards.Count);
             Card cardSelected = activeCards[index];
             shownCards.Add(cardSelected);
+            hiddenCards.RemoveAt(cardSelected);
         }
-        for (int i = 0; i < 5; i++)
-        {
-            Card cardSelected = activeCards[i];
-            hiddenCards.Add(cardSelected);
-        }
+        
 
 
         foreach (var item in activeCards)
