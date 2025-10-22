@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
             for (int j = 0; j < (int)Symbol.Count; j++)
             {
                 //Debug.Log($"{(Value)i} - {(Symbol)j}");
-                Card newCard;
+                Card newCard = new Card();
                 newCard.value = (Value)i;
                 newCard.symbol = (Symbol)j;
                 cards.Add(newCard);
@@ -49,17 +49,21 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < 4; i++)
         {
-            int index = Random.Range(0, activeCards.Count);
-            Card cardSelected = activeCards[index];
+            int index = Random.Range(0, hiddenCards.Count);
+            Card cardSelected = hiddenCards[index];
             shownCards.Add(cardSelected);
-            hiddenCards.RemoveAt(cardSelected);
+            hiddenCards.RemoveAt(index);
         }
-        
 
 
-        foreach (var item in activeCards)
+
+        foreach (var item in shownCards)
         {
-           Debug.Log($"{item.value} - {item.symbol}");
+            Debug.Log($"<color=Green>{item.value} - {item.symbol}</color>");
+        }
+        foreach (var item in hiddenCards)
+        {
+            Debug.Log($"<color=Red>{item.value} - {item.symbol}</color>");
         }
     }
 
