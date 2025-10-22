@@ -22,7 +22,6 @@ public class RelayManager : MonoBehaviour
   public static RelayManager instance;
   const int m_MaxConnections = 1;
   public string RelayJoinCode;
-
   private Allocation allocation;
   private JoinAllocation joinAllocation;
 
@@ -43,6 +42,7 @@ public class RelayManager : MonoBehaviour
     AuthenticatePlayer();
     btnStartHost.onClick.AddListener(OnStartHostClick);
     btnStartClient.onClick.AddListener(OnStartClientClick);
+    joinCodeInputField.onEndEdit.AddListener(ConfigureClientStart);
   }
 
   private void OnStartHostClick()
@@ -63,10 +63,11 @@ public class RelayManager : MonoBehaviour
 
   private void ConfigureClientStart(string value)
   {
+    RelayJoinCode = value;
     joinCodeInputField.onEndEdit.RemoveListener(ConfigureClientStart);
     StartCoroutine(ConfigureTransportAndStartNgoAsConnectingPlayer());
   }
-  
+
   async void AuthenticatePlayer()
   {
     try
@@ -80,7 +81,7 @@ public class RelayManager : MonoBehaviour
       Debug.LogException(e);
     }
   }
-  
+
   // ///////////////////////////////// HOST SERVER CONNECTION
   public async Task<string> AllocateRelayServerAndGetJoinCode(int maxConnections, string region = null)
   {
@@ -133,7 +134,7 @@ public class RelayManager : MonoBehaviour
     NetworkManager.Singleton.StartHost();
     yield return null;
   }
-
+  
   // ///////////////////////////////// CLIENT SERVER CONNECTION
   public async Task<JoinAllocation> JoinRelayServerFromJoinCode(string joincode)
   {
@@ -170,7 +171,7 @@ public class RelayManager : MonoBehaviour
       Debug.LogError("Exception thrown when attempting to connect to Relay Server. Exception: " + clientRelayUtilityTask.Exception.Message);
       yield break;
     }
-
+    
     // var relayServerData = clientRelayUtilityTask.Result;
     // Join sever and connect as client
     NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(AllocationUtils.ToRelayServerData(joinAllocation, "dtls"));
