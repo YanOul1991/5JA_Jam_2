@@ -19,21 +19,21 @@ using UnityEngine.UI;
 
 public class RelayManager : MonoBehaviour
 {
-  public static RelayManager instance;
-  const int m_MaxConnections = 1;
+  public static RelayManager Singleton;
+  const int m_MaxConnections = 4;
   public string RelayJoinCode;
   private Allocation allocation;
   private JoinAllocation joinAllocation;
 
   [SerializeField] private TextMeshProUGUI joinCodeText;
   [SerializeField] private TMP_InputField joinCodeInputField;
-
+  
   [SerializeField] private Button btnStartHost;
   [SerializeField] private Button btnStartClient;
 
   void Awake()
   {
-    if (instance == null) instance = this;
+    if (Singleton == null) Singleton = this;
     else Destroy(gameObject);
   }
 
