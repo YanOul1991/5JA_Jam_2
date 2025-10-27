@@ -57,13 +57,17 @@ public class GameManager : MonoBehaviour
 
 
 
-        foreach (var item in shownCards)
+        foreach (Card item in shownCards)
         {
             Debug.Log($"<color=Green>{item.value} - {item.symbol}</color>");
         }
-        foreach (var item in hiddenCards)
+        foreach (Card item in hiddenCards)
         {
             Debug.Log($"<color=Red>{item.value} - {item.symbol}</color>");
+        }
+        foreach (Card item in activeCards)
+        {
+            Debug.Log($"<color=Purple>{item.value} - {item.symbol}</color>");
         }
     }
 
