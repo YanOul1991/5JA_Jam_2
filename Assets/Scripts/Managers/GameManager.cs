@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
 {
 
     List<Card> cards;
-    List<Card> activeCards;
+    public List<Card> activeCards;
     List<Card> shownCards;
     List<Card> hiddenCards;
     
