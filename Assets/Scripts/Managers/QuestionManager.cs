@@ -4,7 +4,7 @@ public class QuestionManager : MonoBehaviour
 {
     public GameManager gameManager;
 
-    void QuestionColorRed()
+    public void QuestionColorRed()
     {
         int totalRed = 0;
 
@@ -19,7 +19,7 @@ public class QuestionManager : MonoBehaviour
         // Optionally do something with totalBlack:
         Debug.Log("Total black cards: " + totalRed);
     }
-    void QuestionColorBlack()
+    public void QuestionColorBlack()
     {
         int totalBlack = 0;
 
@@ -35,7 +35,7 @@ public class QuestionManager : MonoBehaviour
         Debug.Log("Total black cards: " + totalBlack);
     }
 
-    void QuestionValue()
+    public void QuestionValue()
     {
         int totalKing = 0;
         int totalQueen = 0;
@@ -62,13 +62,13 @@ public class QuestionManager : MonoBehaviour
             }
         }
         
-        Debug.Log("Total black cards: " + totalKing);
-        Debug.Log("Total black cards: " + totalQueen);
-        Debug.Log("Total black cards: " + totalJack);
-        Debug.Log("Total black cards: " + totalAce);
+        Debug.Log("Total King cards: " + totalKing);
+        Debug.Log("Total Queen cards: " + totalQueen);
+        Debug.Log("Total Jack cards: " + totalJack);
+        Debug.Log("Total Ace cards: " + totalAce);
     }
     
-    void QuestionSymbol()
+    public void QuestionSymbol()
     {
         int totalHearts = 0;
         int totalDiamonds = 0;
@@ -95,9 +95,9 @@ public class QuestionManager : MonoBehaviour
             }
         }
 
-        Debug.Log("Total black cards: " + totalHearts);
-        Debug.Log("Total black cards: " + totalDiamonds);
-        Debug.Log("Total black cards: " + totalSpades);
-        Debug.Log("Total black cards: " + totalClubs);
+        Debug.Log("Total Heart cards: " + totalHearts);
+        Debug.Log("Total Diamonds cards: " + totalDiamonds);
+        Debug.Log("Total Spades cards: " + totalSpades);
+        Debug.Log("Total Clubs cards: " + totalClubs);
     }
 }
