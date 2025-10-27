@@ -1,4 +1,4 @@
-enum Symbol
+public enum Symbol
 {
     Heart,
     Spades,
@@ -7,7 +7,7 @@ enum Symbol
     Count
 }
 
-enum Value
+public enum Value
 {
     King,
     Queen,
@@ -16,7 +16,7 @@ enum Value
     Count
 }
 
-class Card
+public class Card
 {
     public Value value;
     public Symbol symbol;
