@@ -167,7 +167,7 @@ public class PlayOnlineController : MonoBehaviour
     /// <summary>Hôte : crée l’allocation Relay, configure UTP (forme longue), renvoie JoinCode.</summary>
     private async Task<(string joinCode, Allocation alloc)> RelayCreateHostAsync(ushort maxClients)
     {
-        var alloc = await RelayService.Instance.CreateAllocationAsync(4);
+        var alloc = await RelayService.Instance.CreateAllocationAsync(1);
 
         var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
         transport.SetRelayServerData(
