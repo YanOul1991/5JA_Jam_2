@@ -38,7 +38,7 @@ public class PlayOnlineController : MonoBehaviour
     private float ticketPollSeconds = 1.0f;
 
     [Header("Relay")]
-    [SerializeField] private ushort maxClientsForHost = 1; // 2 joueurs total → 1 client à accepter
+    [SerializeField] private ushort maxClientsForHost = 4; // 2 joueurs total → 1 client à accepter
   
    private int quickJoinRetryCount = 3;
    private int quickJoinRetryDelayMs = 1000;
@@ -167,7 +167,7 @@ public class PlayOnlineController : MonoBehaviour
     /// <summary>Hôte : crée l’allocation Relay, configure UTP (forme longue), renvoie JoinCode.</summary>
     private async Task<(string joinCode, Allocation alloc)> RelayCreateHostAsync(ushort maxClients)
     {
-        var alloc = await RelayService.Instance.CreateAllocationAsync(maxClients);
+        var alloc = await RelayService.Instance.CreateAllocationAsync(4);
 
         var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
         transport.SetRelayServerData(
@@ -287,8 +287,8 @@ public class PlayOnlineController : MonoBehaviour
                 }
             }
 
-            Lobby = await LobbyService.Instance.CreateLobbyAsync("Coop2MM", 2);
-            Debug.Log("[Lobby] Created as host");
+            Lobby = await LobbyService.Instance.CreateLobbyAsync("Coop2MM", 20);
+            Debug.Log($"<color=green>[Lobby] Created as host | Lobby player count {Lobby.MaxPlayers}</color>");
             return true; // a créé → hôte
         }
 

@@ -18,8 +18,7 @@ public class NetworkPlayer : NetworkBehaviour
     }
   }
 
-  private void Start()
-  { }
+  private void Start() { }
 
   public override void OnNetworkSpawn()
   {
