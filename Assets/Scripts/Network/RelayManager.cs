@@ -128,8 +128,7 @@ public class RelayManager : MonoBehaviour
 
     var relayServerData = serverRelayUtilityTask.Result;
 
-    //Display the joincode to the user
-    // ajout, diff�rent du tuto : SetRelayServerData
+    
     NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(AllocationUtils.ToRelayServerData(allocation, "dtls"));
     NetworkManager.Singleton.StartHost();
     yield return null;

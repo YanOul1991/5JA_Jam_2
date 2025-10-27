@@ -17,16 +17,9 @@ public class NetworkPlayer : NetworkBehaviour
       Destroy(gameObject);
     }
   }
-  
-  private void Start()
-  {
-    NetworkManager.Singleton.OnClientConnectedCallback += OnNetworkClientConnected;
-  }
 
-  private void OnNetworkClientConnected(ulong id)
-  {
-    Debug.Log($"A client has connected | current connected clients count : {NetworkManager.Singleton.ConnectedClients.Count}");
-  }
+  private void Start()
+  { }
 
   public override void OnNetworkSpawn()
   {
