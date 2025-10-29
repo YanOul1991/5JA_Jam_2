@@ -35,7 +35,7 @@ public class QuestionManager : MonoBehaviour
         Debug.Log("Total black cards: " + totalBlack);
     }
 
-    public void QuestionValue()
+    public void QuestionValue(string FigureButtonName)
     {
         int totalKing = 0;
         int totalQueen = 0;
@@ -61,14 +61,25 @@ public class QuestionManager : MonoBehaviour
                 totalAce++;
             }
         }
-        
-        Debug.Log("Total King cards: " + totalKing);
-        Debug.Log("Total Queen cards: " + totalQueen);
-        Debug.Log("Total Jack cards: " + totalJack);
-        Debug.Log("Total Ace cards: " + totalAce);
+        if(FigureButtonName == "KingButton")
+        {
+            Debug.Log("Total King cards: " + totalKing);
+        }
+        else if(FigureButtonName == "QueenButton")
+        {
+            Debug.Log("Total Queen cards: " + totalQueen);
+        }
+        else if(FigureButtonName == "JackButton")
+        {
+            Debug.Log("Total Jack cards: " + totalJack);
+        }
+        else if(FigureButtonName == "AceButton")
+        {
+            Debug.Log("Total Ace cards: " + totalAce);
+        }
     }
     
-    public void QuestionSymbol()
+    public void QuestionSymbol(string SymbolButtonName)
     {
         int totalHearts = 0;
         int totalDiamonds = 0;
@@ -95,9 +106,21 @@ public class QuestionManager : MonoBehaviour
             }
         }
 
-        Debug.Log("Total Heart cards: " + totalHearts);
-        Debug.Log("Total Diamonds cards: " + totalDiamonds);
-        Debug.Log("Total Spades cards: " + totalSpades);
-        Debug.Log("Total Clubs cards: " + totalClubs);
+        if(SymbolButtonName == "HeartsButton")
+        {
+            Debug.Log("Total Heart cards: " + totalHearts);
+        }
+        else if(SymbolButtonName == "DiamondsButton")
+        {
+            Debug.Log("Total Diamonds cards: " + totalDiamonds);
+        }
+        else if(SymbolButtonName == "SpadesButton")
+        {
+            Debug.Log("Total Spades cards: " + totalSpades);
+        }
+        else if(SymbolButtonName == "ClubsButton")
+        {
+            Debug.Log("Total Clubs cards: " + totalClubs);
+        }
     }
 }
