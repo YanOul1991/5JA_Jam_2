@@ -167,7 +167,7 @@ public class PlayOnlineController : MonoBehaviour
     /// <summary>Hôte : crée l’allocation Relay, configure UTP (forme longue), renvoie JoinCode.</summary>
     private async Task<(string joinCode, Allocation alloc)> RelayCreateHostAsync(ushort maxClients)
     {
-        var alloc = await RelayService.Instance.CreateAllocationAsync(1);
+        var alloc = await RelayService.Instance.CreateAllocationAsync(4);
 
         var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
         transport.SetRelayServerData(
@@ -287,7 +287,7 @@ public class PlayOnlineController : MonoBehaviour
                 }
             }
 
-            Lobby = await LobbyService.Instance.CreateLobbyAsync("Coop2MM", 20);
+            Lobby = await LobbyService.Instance.CreateLobbyAsync("Coop2MM", 5);
             Debug.Log($"<color=green>[Lobby] Created as host | Lobby player count {Lobby.MaxPlayers}</color>");
             return true; // a créé → hôte
         }

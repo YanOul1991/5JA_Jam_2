@@ -19,7 +19,7 @@ public class NetworkPlayer : NetworkBehaviour
   }
 
   private void Start() { }
-
+  
   public override void OnNetworkSpawn()
   {
     base.OnNetworkSpawn();
