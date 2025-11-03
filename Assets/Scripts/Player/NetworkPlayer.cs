@@ -4,7 +4,7 @@ using Unity.Netcode;
 public class NetworkPlayer : NetworkBehaviour
 {
   static public NetworkPlayer Singleton;
-
+  
   private void Awake()
   {
     if (Singleton == null)
@@ -23,6 +23,5 @@ public class NetworkPlayer : NetworkBehaviour
   public override void OnNetworkSpawn()
   {
     base.OnNetworkSpawn();
-    Debug.Log("Connected !!!");
   }
 }
