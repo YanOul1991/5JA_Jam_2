@@ -4,24 +4,40 @@ using System.Collections;
 using UnityEngine.EventSystems;
 public class UIManager : MonoBehaviour
 {
+    [Header("Indices Locked")]
     public Sprite indicesLockedMediumSprite;
     public Sprite indicesLockedSmallSprite;
     public Sprite indicesResultRed;
     public Sprite indicesResultBlack;
 
+    [Header("Indices Resultats Figures")]
+    public Sprite indicesResultAces;
+    public Sprite indicesResultKings;
+    public Sprite indicesResultQueens;
+    public Sprite indicesResultJacks;
+
+    [Header("Indices Resultats Symboles")]
+    public Sprite indicesResultHearts;
+    public Sprite indicesResultDiamonds;
+    public Sprite indicesResultSpades;
+    public Sprite indicesResultClubs;
+
     public GameObject indices;
+
+    [Header("Indices Couleurs")]
     public GameObject indicesRed;
     public GameObject indicesBlack;
 
+    [Header("Indices Resultats Couleurs")]
     public GameObject indicesResultRedText;
     public GameObject indicesResultBlackText;
 
+    [Header("Indices Bouton Indices")]
     public GameObject indicesCouleursButton;
     public GameObject indicesSymbolesButton;
     public GameObject indicesFiguresButton;
 
     public GameObject closeIndicesButton;
-
 
     public QuestionManager questionManager;
 
