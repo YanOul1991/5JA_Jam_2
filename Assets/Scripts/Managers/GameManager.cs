@@ -73,7 +73,7 @@ public class GameManager : MonoBehaviour
             Debug.Log($"<color=Purple>{item.value} - {item.symbol}</color>");
         }
 
-        //DisplayAllCards();
+        DisplayAllCards();
     }
 
     void Update()
