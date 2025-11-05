@@ -131,6 +131,7 @@ public class UIManager : MonoBehaviour
     public void IndiceRed()
     {
         LockButton(indicesBlack, indicesLockedMediumSprite);
+        LockButton(indicesRed, indicesLockedMediumSprite);
         SetIndice(indicesRed, indicesResultRed, indicesResultRedText);
 
         nombreIndicesRestantsInt--;
@@ -140,6 +141,7 @@ public class UIManager : MonoBehaviour
 
     public void IndiceBlack()
     {
+        LockButton(indicesBlack, indicesLockedMediumSprite);
         LockButton(indicesRed, indicesLockedMediumSprite);
         SetIndice(indicesBlack, indicesResultBlack, indicesResultBlackText);
 
@@ -180,8 +182,6 @@ public class UIManager : MonoBehaviour
             SetIndice(indiceSpades, indicesResultSpades, indicesResultSpadesText);
         else if (clickedButton == indiceClubs)
             SetIndice(indiceClubs, indicesResultClubs, indicesResultClubsText);
-
-        clickedButton.GetComponent<Button>().interactable = false;
 
         nombreIndicesRestantsInt--;
         nombreIndicesRestantsPopup.text = nombreIndicesRestantsInt.ToString();
@@ -226,8 +226,6 @@ public class UIManager : MonoBehaviour
             SetIndice(indiceQueens, indicesResultQueens, indicesResultQueensText);
         else if (clickedButton == indiceJacks)
             SetIndice(indiceJacks, indicesResultJacks, indicesResultJacksText);
-
-        clickedButton.GetComponent<Button>().interactable = false;
 
         nombreIndicesRestantsInt--;
         nombreIndicesRestantsPopup.text = nombreIndicesRestantsInt.ToString();
