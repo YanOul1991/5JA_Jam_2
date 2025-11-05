@@ -1,12 +1,16 @@
 using UnityEngine;
 using Unity.Netcode;
 using UnityEditor.Rendering;
+using UnityEngine.SceneManagement;
 
 public class NetworkPlayer : NetworkBehaviour
 {
   static public NetworkPlayer Singleton;
 
-  private Card m_card;
+  private Card m_cardSelect;
+
+  private Card[] m_cardListData;
+  private int m_activeCardIndex;
 
   private void Awake()
   {
@@ -24,17 +28,56 @@ public class NetworkPlayer : NetworkBehaviour
   public override void OnNetworkSpawn()
   {
     base.OnNetworkSpawn();
+
+    m_cardListData = new Card[5];
   }
 
   public void StartNextRound()
   {
-    m_card = new Card
+    m_cardSelect = new Card
     {
-      value = Value.King,
-      symbol = Symbol.Diamonds
+      value = 0,
+      symbol = 0
     };
 
+    for (int i = 0; i < m_cardListData.Length; i++)
+    {
+      m_cardListData[i] = new Card
+      {
+        value = 0,
+        symbol = 0
+      };
+    }
+
     DisplayCardSelectionUi(true);
+    SceneData.Singleton.m_cardList.m_transParent.gameObject.SetActive(true);
+
+    SceneData.Singleton.m_cardList.m_cardListItems[0].m_button.onClick.AddListener(delegate
+    {
+      ModifySelectedCard(0);
+    });
+    SceneData.Singleton.m_cardList.m_cardListItems[1].m_button.onClick.AddListener(delegate
+    {
+      ModifySelectedCard(1);
+    });
+    SceneData.Singleton.m_cardList.m_cardListItems[2].m_button.onClick.AddListener(delegate
+    {
+      ModifySelectedCard(2);
+    });
+    SceneData.Singleton.m_cardList.m_cardListItems[2].m_button.onClick.AddListener(delegate
+    {
+      ModifySelectedCard(2);
+    });
+    SceneData.Singleton.m_cardList.m_cardListItems[3].m_button.onClick.AddListener(delegate
+    {
+      ModifySelectedCard(3);
+    });
+    SceneData.Singleton.m_cardList.m_cardListItems[4].m_button.onClick.AddListener(delegate
+    {
+      ModifySelectedCard(4);
+    });
+
+    SceneData.Singleton.m_buttonSendCards.onClick.AddListener(OnSendCardsToServer);
   }
 
   private void DisplayCardSelectionUi(bool _display)
@@ -43,50 +86,58 @@ public class NetworkPlayer : NetworkBehaviour
     if (_display)
     {
       SceneData.Singleton.m_uiCardSelect.mainObj.SetActive(true);
-      SceneData.Singleton.m_uiCardSelect.BtnValueLeft.onClick.AddListener(OnCardValueLeftButtonClick);
-      SceneData.Singleton.m_uiCardSelect.BtnValueRight.onClick.AddListener(OnCardValueRightButtonClick);
-      SceneData.Singleton.m_uiCardSelect.BtnSymbolRight.onClick.AddListener(OnCardSymbolLeftButtonClick);
-      SceneData.Singleton.m_uiCardSelect.BtnSymbolLeft.onClick.AddListener(OnCardSymbolRightButtonClick);
+      SceneData.Singleton.m_uiCardSelect.m_buttonValue.onClick.AddListener(OnCardValueButtonClick);
+      SceneData.Singleton.m_uiCardSelect.m_buttonSymbol.onClick.AddListener(OnCardSymbolButtonClick);
     }
     else
     {
       SceneData.Singleton.m_uiCardSelect.mainObj.SetActive(false);
-      SceneData.Singleton.m_uiCardSelect.BtnValueLeft.onClick.RemoveAllListeners();
-      SceneData.Singleton.m_uiCardSelect.BtnSymbolRight.onClick.RemoveAllListeners();
+      SceneData.Singleton.m_uiCardSelect.m_buttonValue.onClick.RemoveAllListeners();
+      SceneData.Singleton.m_uiCardSelect.m_buttonSymbol.onClick.RemoveAllListeners();
     }
   }
 
   private void RefreshCardDisplay()
   {
-    SceneData.Singleton.m_uiCardSelect.TextValue.text = m_card.value.ToString();
-    SceneData.Singleton.m_uiCardSelect.TextSymbol.text = m_card.symbol.ToString();
+    SceneData.Singleton.m_uiCardSelect.TextValue.text = m_cardSelect.value.ToString();
+    SceneData.Singleton.m_uiCardSelect.TextSymbol.text = m_cardSelect.symbol.ToString();
+
+    for (int i = 0; i < SceneData.Singleton.m_cardList.m_cardListItems.Length; i++)
+    {
+      SceneData.Singleton.m_cardList.m_cardListItems[i].m_symbolText.text = m_cardListData[i].symbol.ToString();
+      SceneData.Singleton.m_cardList.m_cardListItems[i].m_valueText.text = m_cardListData[i].value.ToString();
+    }
   }
 
-  private void OnCardValueLeftButtonClick()
+  private void ModifySelectedCard(int index)
   {
-    m_card.value = (int)m_card.value == 0 ? (Value)(int)(Value.Count - 1) : (Value)(int)m_card.value - 1;
-    Debug.Log("Value Left Click");
+    Debug.Log($"Modifing {index}");
+    m_activeCardIndex = index;
+
+    m_cardSelect.value = m_cardListData[m_activeCardIndex].value;
+    m_cardSelect.symbol = m_cardListData[m_activeCardIndex].symbol;
     RefreshCardDisplay();
   }
 
-  private void OnCardValueRightButtonClick()
+  private void OnCardValueButtonClick()
   {
-    m_card.value = (int)m_card.value == (int)(Value.Count - 1) ? (Value)0 : (Value)(int)m_card.value + 1;
-    Debug.Log("Value Right Click");
+    Debug.Log("card Click");
+    m_cardListData[m_activeCardIndex].value = (int)m_cardListData[m_activeCardIndex].value == (int)(Value.Count - 1) ? (Value)0 : (Value)(int)m_cardListData[m_activeCardIndex].value + 1;
+    m_cardSelect.value = m_cardListData[m_activeCardIndex].value;
     RefreshCardDisplay();
   }
 
-  private void OnCardSymbolLeftButtonClick()
+  private void OnCardSymbolButtonClick()
   {
-    m_card.symbol = (int)m_card.symbol == 0 ? (Symbol)(int)(Symbol.Count - 1) : (Symbol)(int)m_card.symbol - 1;
-    Debug.Log("Symbol Left Click");
+    Debug.Log("card Click");
+    m_cardListData[m_activeCardIndex].symbol = (int)m_cardListData[m_activeCardIndex].symbol == (int)(Symbol.Count - 1) ? (Symbol)0 : (Symbol)(int)m_cardListData[m_activeCardIndex].symbol + 1;
+    m_cardSelect.symbol = m_cardListData[m_activeCardIndex].symbol;
     RefreshCardDisplay();
   }
-  
-  private void OnCardSymbolRightButtonClick()
+
+  private void OnSendCardsToServer()
   {
-    m_card.symbol = (int)m_card.symbol == (int)(Symbol.Count - 1) ? (Symbol)0 : (Symbol)(int)m_card.symbol + 1;
-    Debug.Log("Symbol Right Click");
-    RefreshCardDisplay();
+    ulong cardData = NetworkServer.Singleton.ConvertCardsToByte(m_cardListData);
+    NetworkServer.Singleton.NetSendDataToServerRpc(cardData);
   }
 }

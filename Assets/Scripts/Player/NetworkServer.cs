@@ -47,8 +47,6 @@ public class NetworkServer : NetworkBehaviour
     SceneData.Singleton.TextLobbyPlayerCount.gameObject.SetActive(true);
 
     if (IsServer) NetworkManager.Singleton.OnClientConnectedCallback += OnNetworkClientConnected;
-
-    NetworkPlayer.Singleton.StartNextRound();
   }
 
   public override void OnNetworkDespawn()
@@ -76,6 +74,7 @@ public class NetworkServer : NetworkBehaviour
       m_lConnectedClients.Add(id);
       NetUpdateClientCountsRpc();
 
+      RoundStart();
       if (m_lConnectedClients.Count >= 3)
       {
         NetworkManager.Singleton.OnClientConnectedCallback -= OnNetworkClientConnected;
@@ -116,10 +115,15 @@ public class NetworkServer : NetworkBehaviour
     m_dClientsCardsData[sender] = data;
     m_lClientWaitList.Remove(sender);
 
-    // {(Symbol)(data & 0xF0)}.
-    // string answerCards = $"Recieved Following Answer form Client {sender}\n";
+    string answerCards = $"Recieved Following Answer form Client {sender}\n";
+    for (int i = 0; i < 5; i++)
+    {
+      answerCards += $"<color=cyan> {(Symbol)(data & 0x0Ful)} | {(Value)((data & (0x0Ful << 4)) >> 4)}</color>\n";
+      data >>= 8;
+    }
+    Debug.Log(answerCards);
 
-    // Debug.Log(answerCards);
+    return;
 
     if (m_lClientWaitList.Count <= 0)
     {
@@ -145,7 +149,7 @@ public class NetworkServer : NetworkBehaviour
   void NetSendMessageToClientRpc(byte serverMessage, ClientRpcParams rpcParams = default)
   {
     if (!IsClient) return;
-    
+
     switch ((ServerMessage)serverMessage)
     {
       case ServerMessage.GameStart:
@@ -173,5 +177,17 @@ public class NetworkServer : NetworkBehaviour
         Debug.LogError($"Unknown Server Message...");
         break;
     }
+  }
+  
+  public ulong ConvertCardsToByte(Card[] cards)
+  {
+    ulong value = 0;
+
+    for (int i = 0; i < 5; i++)
+    {
+      value |= ((ulong)((byte)cards[i].symbol | (byte)cards[i].value << 4)) << (i * 8);
+    }
+    
+    return value;
   }
 }
