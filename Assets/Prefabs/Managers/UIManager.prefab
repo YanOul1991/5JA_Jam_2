@@ -1,0 +1,88 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3813920257689269246
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 220481204455948332}
+  - component: {fileID: 7289775749967974643}
+  m_Layer: 0
+  m_Name: UIManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &220481204455948332
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3813920257689269246}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 971.8192, y: 0, z: 3327.8123}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7289775749967974643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3813920257689269246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6d7b29875b86c842b32ebf2558a1a29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIManager
+  indices: {fileID: 0}
+  nombreIndicesRestantsPopup: {fileID: 0}
+  nombreIndicesRestants: {fileID: 0}
+  nombreIndicesRestantsInt: 3
+  indicesLockedMediumSprite: {fileID: 21300000, guid: 05b7420caf8d5804c99ccd35b4415821, type: 3}
+  indicesLockedSmallSprite: {fileID: 21300000, guid: 6589cfe3b04c31242aa17f2f6cd46799, type: 3}
+  indicesAces: {fileID: 0}
+  indiceKing: {fileID: 0}
+  indiceQueens: {fileID: 0}
+  indiceJacks: {fileID: 0}
+  indicesResultAcesText: {fileID: 0}
+  indicesResultKingsText: {fileID: 0}
+  indicesResultQueensText: {fileID: 0}
+  indicesResultJacksText: {fileID: 0}
+  indicesResultAces: {fileID: 21300000, guid: a7cb0d863f8e396428276e766164c24f, type: 3}
+  indicesResultKings: {fileID: 21300000, guid: 23a950e079bba89448f429dd6e3ebc06, type: 3}
+  indicesResultQueens: {fileID: 21300000, guid: 4a3ee0f062cdd854481e166ba781de3a, type: 3}
+  indicesResultJacks: {fileID: 21300000, guid: 3e444eb495b4a6c41a8b5d59329a086c, type: 3}
+  indicesHearts: {fileID: 0}
+  indiceDiamonds: {fileID: 0}
+  indiceSpades: {fileID: 0}
+  indiceClubs: {fileID: 0}
+  indicesResultHeartsText: {fileID: 0}
+  indicesResultDiamondsText: {fileID: 0}
+  indicesResultSpadesText: {fileID: 0}
+  indicesResultClubsText: {fileID: 0}
+  indicesResultHearts: {fileID: 21300000, guid: 8a01ddc17dbbbf9458c0aeda5797a6ca, type: 3}
+  indicesResultDiamonds: {fileID: 21300000, guid: 9a3359422fd78724cab818161ef94d5b, type: 3}
+  indicesResultSpades: {fileID: 21300000, guid: 3bd91a9f32e8df04bb631f21903091ce, type: 3}
+  indicesResultClubs: {fileID: 21300000, guid: 1c287976d98d3ba4e8e45b0fe02022d1, type: 3}
+  indicesRed: {fileID: 0}
+  indicesBlack: {fileID: 0}
+  indicesResultRedText: {fileID: 0}
+  indicesResultBlackText: {fileID: 0}
+  indicesResultRed: {fileID: 21300000, guid: 0e4c0b3d3e10e3443acdb68da4324ebd, type: 3}
+  indicesResultBlack: {fileID: 21300000, guid: 641a9f6e776a25040b4dca964accd5f3, type: 3}
+  indicesCouleursButton: {fileID: 0}
+  indicesSymbolesButton: {fileID: 0}
+  indicesFiguresButton: {fileID: 0}
+  closeIndicesBackground: {fileID: 0}
+  closeIndicesButton: {fileID: 0}
+  questionManager: {fileID: 0}

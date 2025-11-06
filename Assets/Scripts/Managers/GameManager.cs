@@ -9,6 +9,9 @@ public class GameManager : MonoBehaviour
     public List<Card> activeCards;
     List<Card> shownCards;
     List<Card> hiddenCards;
+
+    public GameObject cardPrefab;
+    public Transform cardParent;
     
     void Awake()
     {
@@ -69,10 +72,39 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log($"<color=Purple>{item.value} - {item.symbol}</color>");
         }
+
+        DisplayAllCards();
     }
 
     void Update()
     {
-        
+
+    }
+
+    void DisplayAllCards()
+    {
+        for (int i = 0; i < activeCards.Count; i++)
+        {
+            Card card = activeCards[i];
+
+            // Create the GameObject for each active card
+            GameObject cardObj = Instantiate(cardPrefab, cardParent);
+            cardObj.name = $"{card.value}_{card.symbol}";
+
+            // Simple positioning (3x3 grid)
+            float x = (i % 3) * 2.5f;
+            float y = (i / 3) * -3.5f;
+            cardObj.transform.position = new Vector3(x, y, 0);
+
+            // Is this card one of the shown ones?
+            bool isShown = shownCards.Contains(card);
+
+            // Set up display
+            CardDisplay display = cardObj.GetComponent<CardDisplay>();
+            if (display != null)
+            {
+                display.SetCard(card, isShown);
+            }
+        }
     }
 }
