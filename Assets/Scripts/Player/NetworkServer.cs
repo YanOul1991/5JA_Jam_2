@@ -9,7 +9,8 @@ public enum ServerMessage : byte
   RoundEnd,
   RoundStart,
   ResultVictory,
-  ResultDefeat
+  ResultDefeat,
+  ClientConnected
 }
 
 public class NetworkServer : NetworkBehaviour
@@ -32,7 +33,6 @@ public class NetworkServer : NetworkBehaviour
       Destroy(gameObject);
     }
 
-    Debug.Log("NetworkServer Initialized");
     m_lConnectedClients = new List<ulong>();
   }
 
@@ -52,17 +52,6 @@ public class NetworkServer : NetworkBehaviour
   public override void OnNetworkDespawn()
   {
     base.OnNetworkDespawn();
-    /*
-      =============================================================
-      =============================================================
-      =============================================================
-      =============================================================
-      ======================== TO COMPLETE ========================
-      =============================================================
-      =============================================================
-      =============================================================
-      =============================================================
-    */
   }
 
   private void OnNetworkClientConnected(ulong id)
@@ -96,6 +85,7 @@ public class NetworkServer : NetworkBehaviour
     {
       m_dClientsCardsData.Add(client, 0);
     }
+    NetSendMessageToClientRpc((byte)ServerMessage.GameStart);
     NetSendMessageToClientRpc((byte)ServerMessage.RoundStart);
   }
 
@@ -115,6 +105,7 @@ public class NetworkServer : NetworkBehaviour
     m_dClientsCardsData[sender] = data;
     m_lClientWaitList.Remove(sender);
 
+#if UNITY_EDITOR
     string answerCards = $"Recieved Following Answer form Client {sender}\n";
     for (int i = 0; i < 5; i++)
     {
@@ -122,7 +113,7 @@ public class NetworkServer : NetworkBehaviour
       data >>= 8;
     }
     Debug.Log(answerCards);
-
+#endif
     return;
 
     if (m_lClientWaitList.Count <= 0)
@@ -146,40 +137,34 @@ public class NetworkServer : NetworkBehaviour
   }
 
   [ClientRpc(Delivery = RpcDelivery.Reliable, AllowTargetOverride = true)]
-  void NetSendMessageToClientRpc(byte serverMessage, ClientRpcParams rpcParams = default)
+  void NetSendMessageToClientRpc(byte msg, ClientRpcParams rpcParams = default)
   {
     if (!IsClient) return;
 
-    switch ((ServerMessage)serverMessage)
+#if UNITY_EDITOR
+    // DebugServerMessage((ServerMessage)msg);
+#endif
+
+    switch ((ServerMessage)msg)
     {
       case ServerMessage.GameStart:
-        Debug.Log($"<color=yellow>Game has started</color>");
+        NetworkPlayer.Singleton.OnGameStart();
         return;
-
       case ServerMessage.RoundEnd:
-        Debug.Log($"<color=orange>Round has ended! A new round will start soon</color>");
         break;
-
       case ServerMessage.RoundStart:
-        Debug.Log($"<color=cyan>Round has Started!!!</color>");
-        NetworkPlayer.Singleton.StartNextRound();
+        NetworkPlayer.Singleton.OnRoundStart();
         break;
-
       case ServerMessage.ResultDefeat:
-        Debug.Log("<color=red>YOU LOSE!</color>");
         return;
-
       case ServerMessage.ResultVictory:
-        Debug.Log("<color=green>YOU WIN!!!</color>");
         return;
-
       default:
-        Debug.LogError($"Unknown Server Message...");
         break;
     }
   }
-  
-  public ulong ConvertCardsToByte(Card[] cards)
+
+  public ulong CardsToBytes(ref Card[] cards)
   {
     ulong value = 0;
 
@@ -187,7 +172,14 @@ public class NetworkServer : NetworkBehaviour
     {
       value |= ((ulong)((byte)cards[i].symbol | (byte)cards[i].value << 4)) << (i * 8);
     }
-    
+
     return value;
   }
+
+#if UNITY_EDITOR
+  static public void DebugServerMessage(ServerMessage msg)
+  {
+    Debug.Log($"SERVER MESSAGE | {msg}");
+  }
+#endif
 }

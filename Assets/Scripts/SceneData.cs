@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,20 +7,24 @@ using UnityEngine.UI;
 public class SceneData : MonoBehaviour
 {
   static public SceneData Singleton;
-  [SerializeField] public TextMeshProUGUI TextLobbyPlayerCount;
-  [SerializeField] public CardSelect m_uiCardSelect;
+  public TextMeshProUGUI TextLobbyPlayerCount;
+  public CardSelect m_uiCardSelect;
   public CardList m_cardList;
   public Button m_buttonSendCards;
+  public SerializableDictionnary<Value, Sprite> SpritesValues;
+  public SerializableDictionnary<Symbol, Sprite> SpritesSymbols;
 
   void Awake()
   {
     if (Singleton == null) Singleton = this;
     else Destroy(gameObject);
+    SpritesValues.Initialize();
+    SpritesSymbols.Initialize();
   }
 
   private void Start()
   {
-    m_uiCardSelect.mainObj.SetActive(false);
+    m_uiCardSelect.m_mainObj.SetActive(false);
     int listCount = m_cardList.m_transParent.childCount;
 
     m_cardList.m_cardListItems = new CardListItem[listCount];
@@ -27,10 +32,16 @@ public class SceneData : MonoBehaviour
     for (int i = 0; i < m_cardList.m_cardListItems.Length; i++)
     {
       GameObject cardObj = m_cardList.m_transParent.GetChild(i).gameObject;
-      
+
       m_cardList.m_cardListItems[i].m_button = cardObj.GetComponent<Button>();
-      m_cardList.m_cardListItems[i].m_symbolText = cardObj.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-      m_cardList.m_cardListItems[i].m_valueText = cardObj.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+      m_cardList.m_cardListItems[i].m_imageSymbol = cardObj.transform.GetChild(0).GetComponent<Image>();
+      m_cardList.m_cardListItems[i].m_imageValue = cardObj.transform.GetChild(1).GetComponent<Image>();
+    }
+
+    for (int i = 0; i < m_cardList.m_cardListItems.Length; i++)
+    {
+      m_cardList.m_cardListItems[i].m_imageSymbol.sprite = SpritesSymbols[0];
+      m_cardList.m_cardListItems[i].m_imageValue.sprite = SpritesValues[0];
     }
   }
 
@@ -43,11 +54,12 @@ public class SceneData : MonoBehaviour
 [Serializable]
 public struct CardSelect
 {
-  public GameObject mainObj;
-  public Button m_buttonValue;
-  public Button m_buttonSymbol;
-  public TextMeshProUGUI TextValue;
-  public TextMeshProUGUI TextSymbol;
+  public GameObject m_mainObj;
+  public Button m_buttonChangeValue;
+  public Button m_buttonChangeSymbol;
+  public Button m_buttonClose;
+  public Image m_imageValue;
+  public Image m_imageSymbol;
 }
 
 [Serializable]
@@ -61,6 +73,50 @@ public struct CardList
 public struct CardListItem
 {
   public Button m_button;
-  public TextMeshProUGUI m_symbolText;
-  public TextMeshProUGUI m_valueText;
+  public Image m_imageSymbol;
+  public Image m_imageValue;
+}
+
+
+[Serializable]
+public class SerializableDictionnary<TKey, TValue>
+{
+  [Serializable] 
+  private class SerializableDictionnaryEntry
+  {
+    public SerializableDictionnaryEntry(TKey key, TValue value)
+    {
+      this.key = key;
+      this.value = value;
+    }
+
+    public TKey key;
+    public TValue value;
+  }
+
+  [SerializeField] private List<SerializableDictionnaryEntry> _entries = new();
+  private Dictionary<TKey, TValue> _dictionary = new Dictionary<TKey, TValue>();
+
+  public void Initialize()
+  {
+    foreach (SerializableDictionnaryEntry entry in _entries)
+    {
+      _dictionary.Add(entry.key, entry.value);
+    }
+  }
+
+  public TValue this[TKey key]
+  {
+    get { return _dictionary[key]; }
+    set
+    {
+      _dictionary[key] = value;
+      _entries.Add(new SerializableDictionnaryEntry(key, value));
+    }
+  }
+  
+  public bool TryGetValue(TKey key, out TValue value)
+  {
+    return _dictionary.TryGetValue(key, out value);
+  }
 }
