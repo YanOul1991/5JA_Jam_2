@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Netcode;
+using UnityEngine.SceneManagement;
 
 public class NetworkPlayer : NetworkBehaviour
 {
@@ -19,11 +20,48 @@ public class NetworkPlayer : NetworkBehaviour
     {
       Destroy(gameObject);
     }
+
+    SceneManager.sceneLoaded += (scene, mode) =>
+    {
+      if (scene.name == "_Test_Yanis")
+        SceneData.Singleton.buttonStart.onClick.AddListener(() =>
+        {
+          Debug.Log("Start Button Clicked!!!");
+          NetworkServer.Singleton.StartMatchmaking();
+        });
+    };
   }
 
   public override void OnNetworkSpawn()
   {
     base.OnNetworkSpawn();
+
+    SceneData.Singleton.ButtonQuitGame.onClick.AddListener(() =>
+    {
+      NetworkManager.Singleton.Shutdown();
+    });
+  }
+
+  public override void OnNetworkDespawn()
+  {
+    base.OnNetworkDespawn();
+
+    SceneData sdata = SceneData.Singleton;
+
+    sdata.ButtonQuitGame.onClick.RemoveAllListeners();
+
+    sdata.m_uiCardSelect.m_mainObj.SetActive(false);
+    sdata.m_uiCardSelect.m_buttonClose.onClick.RemoveAllListeners();
+    sdata.m_uiCardSelect.m_buttonChangeValue.onClick.RemoveAllListeners();
+    sdata.m_uiCardSelect.m_buttonChangeSymbol.onClick.RemoveAllListeners();
+
+    sdata.ButtonSendCards.onClick.RemoveAllListeners();
+    sdata.textGameStatus.text = "";
+    sdata.textGameStatus.gameObject.SetActive(false);
+
+    sdata.m_cardList.m_transParent.gameObject.SetActive(false);
+
+    Debug.Log("Disconnected from server");
   }
 
   public void OnGameStart()
@@ -46,7 +84,7 @@ public class NetworkPlayer : NetworkBehaviour
     SceneData.Singleton.m_uiCardSelect.m_buttonClose.onClick.AddListener(() => DisplayCardSelectionUi(false));
     SceneData.Singleton.m_uiCardSelect.m_buttonChangeValue.onClick.AddListener(OnCardValueButtonClick);
     SceneData.Singleton.m_uiCardSelect.m_buttonChangeSymbol.onClick.AddListener(OnCardSymbolButtonClick);
-    SceneData.Singleton.m_buttonSendCards.onClick.AddListener(OnSendCardsToServer);
+    SceneData.Singleton.ButtonSendCards.onClick.AddListener(OnSendCardsToServer);
 
     RefreshCardDisplay();
   }
@@ -59,10 +97,12 @@ public class NetworkPlayer : NetworkBehaviour
     SceneData.Singleton.m_uiCardSelect.m_buttonClose.onClick.RemoveAllListeners();
     SceneData.Singleton.m_uiCardSelect.m_buttonChangeValue.onClick.RemoveAllListeners();
     SceneData.Singleton.m_uiCardSelect.m_buttonChangeSymbol.onClick.RemoveAllListeners();
-    SceneData.Singleton.m_buttonSendCards.onClick.RemoveAllListeners();
+
+    SceneData.Singleton.ButtonSendCards.onClick.RemoveAllListeners();
 
     SceneData.Singleton.textGameStatus.gameObject.SetActive(true);
     SceneData.Singleton.textGameStatus.text = "En attente des resultats";
+
     SceneData.Singleton.m_cardList.m_transParent.gameObject.SetActive(false);
     SceneData.Singleton.m_uiCardSelect.m_mainObj.SetActive(false);
   }
