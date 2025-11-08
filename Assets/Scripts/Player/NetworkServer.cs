@@ -6,20 +6,21 @@ using System.Linq;
 public enum ServerMessage : byte
 {
   GameStart,
-  RoundEnd,
   RoundStart,
   ResultVictory,
   ResultDefeat,
-  ClientConnected
+  ClientConnected,
+  Wait
 }
 
 public class NetworkServer : NetworkBehaviour
 {
   static public NetworkServer Singleton;
-  private NetworkManager m_NetWorkManager;
   private List<ulong> m_lConnectedClients;
   private List<ulong> m_lClientWaitList;
   private Dictionary<ulong, ulong> m_dClientsCardsData;
+  private Dictionary<ulong, int> m_dClientsPoints;
+  private List<byte> m_lPickedCards;
 
   private void Awake()
   {
@@ -36,17 +37,14 @@ public class NetworkServer : NetworkBehaviour
     m_lConnectedClients = new List<ulong>();
   }
 
-  private void Start()
-  {
-    m_NetWorkManager = NetworkManager.Singleton;
-  }
-
   public override void OnNetworkSpawn()
   {
     base.OnNetworkSpawn();
-    SceneData.Singleton.TextLobbyPlayerCount.gameObject.SetActive(true);
 
+    SceneData.Singleton.textGameStatus.gameObject.SetActive(true);
+    SceneData.Singleton.textGameStatus.text = $"En attente de joueurs {NetworkManager.Singleton.ConnectedClientsList.Count}/4";
     if (IsServer) NetworkManager.Singleton.OnClientConnectedCallback += OnNetworkClientConnected;
+
   }
 
   public override void OnNetworkDespawn()
@@ -56,20 +54,17 @@ public class NetworkServer : NetworkBehaviour
 
   private void OnNetworkClientConnected(ulong id)
   {
+    SceneData.Singleton.textGameStatus.text = $"En attente de joueurs {NetworkManager.Singleton.ConnectedClientsList.Count}/4";
     if (IsServer)
     {
-      Debug.Log($"<color=green>New Client connected to server.</color>");
-
       m_lConnectedClients.Add(id);
-      NetUpdateClientCountsRpc();
 
-      RoundStart();
-      if (m_lConnectedClients.Count >= 3)
+      if (m_lConnectedClients.Count >= 2)
       {
+        SceneData.Singleton.textGameStatus.gameObject.SetActive(false);
         NetworkManager.Singleton.OnClientConnectedCallback -= OnNetworkClientConnected;
         NetSendMessageToClientRpc((byte)ServerMessage.GameStart);
         RoundStart();
-        SceneData.Singleton.TextLobbyPlayerCount.gameObject.SetActive(false);
       }
     }
   }
@@ -79,21 +74,28 @@ public class NetworkServer : NetworkBehaviour
     if (!IsServer) return;
 
     m_dClientsCardsData = new Dictionary<ulong, ulong>();
+    m_dClientsPoints = new Dictionary<ulong, int>();
     m_lClientWaitList = new List<ulong>(m_lConnectedClients);
+    m_lPickedCards = new List<byte>();
 
     foreach (ulong client in m_lConnectedClients)
-    {
       m_dClientsCardsData.Add(client, 0);
-    }
+
+
+    foreach (Card card in SceneData.Singleton.gameManager.activeCards)
+      m_lPickedCards.Add((byte)((byte)card.value | ((byte)card.symbol) << 4));
+
+// #if UNITY_EDITOR
+//     string _strDebug = "<color=cyan>The Following cards have been randomly picked</color>\n";
+//     foreach (byte cardByte in m_lPickedCards)
+//     {
+//       _strDebug += $"{(Value)(cardByte & 0x0F)} | {(Symbol)((cardByte & (0x0Fu << 4)) >> 4)}\n";
+//     }
+//     Debug.Log(_strDebug);
+// #endif
+
     NetSendMessageToClientRpc((byte)ServerMessage.GameStart);
     NetSendMessageToClientRpc((byte)ServerMessage.RoundStart);
-  }
-
-  [Rpc(SendTo.Everyone)]
-  void NetUpdateClientCountsRpc()
-  {
-    Debug.Log($"<color=orange>There are currently {m_NetWorkManager.ConnectedClients.Count} players in the game</color>");
-    SceneData.Singleton.SetTextLobbyPlayerCount(m_NetWorkManager.ConnectedClients.Count);
   }
 
   [Rpc(SendTo.Server)]
@@ -105,24 +107,37 @@ public class NetworkServer : NetworkBehaviour
     m_dClientsCardsData[sender] = data;
     m_lClientWaitList.Remove(sender);
 
-#if UNITY_EDITOR
-    string answerCards = $"Recieved Following Answer form Client {sender}\n";
+    NetSendMessageToClientRpc((byte)ServerMessage.Wait, new ClientRpcParams
+    {
+      Send = new ClientRpcSendParams { TargetClientIds = new[] { sender } }
+    });
+
+    int points = 0;
+    List<byte> leftCards = new(m_lPickedCards);
+
     for (int i = 0; i < 5; i++)
     {
-      answerCards += $"<color=cyan> {(Symbol)(data & 0x0Ful)} | {(Value)((data & (0x0Ful << 4)) >> 4)}</color>\n";
+      if (leftCards.Contains((byte)(data & 0xFFul)))
+      {
+        points++;
+        leftCards.Remove((byte)(data & 0xFFul));
+      }
       data >>= 8;
     }
-    Debug.Log(answerCards);
+    
+    m_dClientsPoints[sender] = points;
+
+#if UNITY_EDITOR
+    Debug.Log($"<color=green>The Player {sender} has guessed {points} card(s) correctly!");
 #endif
-    return;
 
     if (m_lClientWaitList.Count <= 0)
     {
-      KeyValuePair<ulong, ulong> max = m_dClientsCardsData.OrderByDescending(kvp => kvp.Value).First();
+      // KeyValuePair<ulong, int> max = m_dClientsPoints.OrderByDescending(kvp => kvp.Value).First();
 
-      ulong winner = max.Key;
+      ulong winner = m_dClientsPoints.OrderByDescending(kvp => kvp.Value).First().Key;
       List<ulong> loosers = new List<ulong>(m_lConnectedClients);
-      loosers.Remove(max.Key);
+      loosers.Remove(winner);
 
       NetSendMessageToClientRpc((byte)ServerMessage.ResultDefeat, new ClientRpcParams
       {
@@ -131,8 +146,12 @@ public class NetworkServer : NetworkBehaviour
 
       NetSendMessageToClientRpc((byte)ServerMessage.ResultVictory, new ClientRpcParams
       {
-        Send = new ClientRpcSendParams { TargetClientIds = new[] { max.Key } }
+        Send = new ClientRpcSendParams { TargetClientIds = new[] { winner } }
       });
+#if UNITY_EDITOR
+      Debug.Log("A new round will start soon...");
+      Invoke(nameof(RoundStart), 10.0f);
+#endif
     }
   }
 
@@ -142,22 +161,27 @@ public class NetworkServer : NetworkBehaviour
     if (!IsClient) return;
 
 #if UNITY_EDITOR
-    // DebugServerMessage((ServerMessage)msg);
+    DebugServerMessage((ServerMessage)msg);
 #endif
-
     switch ((ServerMessage)msg)
     {
       case ServerMessage.GameStart:
         NetworkPlayer.Singleton.OnGameStart();
         return;
-      case ServerMessage.RoundEnd:
-        break;
       case ServerMessage.RoundStart:
+        SceneData.Singleton.textGameStatus.gameObject.SetActive(false);
         NetworkPlayer.Singleton.OnRoundStart();
         break;
       case ServerMessage.ResultDefeat:
+        SceneData.Singleton.textGameStatus.gameObject.SetActive(true);
+        SceneData.Singleton.textGameStatus.text = "Round perdu";
         return;
       case ServerMessage.ResultVictory:
+        SceneData.Singleton.textGameStatus.gameObject.SetActive(true);
+        SceneData.Singleton.textGameStatus.text = "Round Gagne!";
+        return;
+      case ServerMessage.Wait:
+        NetworkPlayer.Singleton.OnRoundEnd();
         return;
       default:
         break;
@@ -170,7 +194,7 @@ public class NetworkServer : NetworkBehaviour
 
     for (int i = 0; i < 5; i++)
     {
-      value |= ((ulong)((byte)cards[i].symbol | (byte)cards[i].value << 4)) << (i * 8);
+      value |= ((ulong)((byte)cards[i].value | (byte)cards[i].symbol << 4)) << (i * 8);
     }
 
     return value;

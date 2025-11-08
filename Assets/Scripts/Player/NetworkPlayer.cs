@@ -47,6 +47,8 @@ public class NetworkPlayer : NetworkBehaviour
     SceneData.Singleton.m_uiCardSelect.m_buttonChangeValue.onClick.AddListener(OnCardValueButtonClick);
     SceneData.Singleton.m_uiCardSelect.m_buttonChangeSymbol.onClick.AddListener(OnCardSymbolButtonClick);
     SceneData.Singleton.m_buttonSendCards.onClick.AddListener(OnSendCardsToServer);
+
+    RefreshCardDisplay();
   }
   
   public void OnRoundEnd()
@@ -58,6 +60,11 @@ public class NetworkPlayer : NetworkBehaviour
     SceneData.Singleton.m_uiCardSelect.m_buttonChangeValue.onClick.RemoveAllListeners();
     SceneData.Singleton.m_uiCardSelect.m_buttonChangeSymbol.onClick.RemoveAllListeners();
     SceneData.Singleton.m_buttonSendCards.onClick.RemoveAllListeners();
+
+    SceneData.Singleton.textGameStatus.gameObject.SetActive(true);
+    SceneData.Singleton.textGameStatus.text = "En attente des resultats";
+    SceneData.Singleton.m_cardList.m_transParent.gameObject.SetActive(false);
+    SceneData.Singleton.m_uiCardSelect.m_mainObj.SetActive(false);
   }
 
   private void DisplayCardSelectionUi(bool _display)
@@ -83,9 +90,7 @@ public class NetworkPlayer : NetworkBehaviour
 
   private void ModifySelectedCard(int index)
   {
-    Debug.Log($"Modifing {index}");
     m_activeCardIndex = index;
-
     m_cardSelect.value = m_cardListData[m_activeCardIndex].value;
     m_cardSelect.symbol = m_cardListData[m_activeCardIndex].symbol;
     DisplayCardSelectionUi(true);
