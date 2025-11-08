@@ -7,13 +7,14 @@ using UnityEngine.UI;
 public class SceneData : MonoBehaviour
 {
   static public SceneData Singleton;
-  public TextMeshProUGUI TextLobbyPlayerCount;
+  public GameManager gameManager;
+  public TextMeshProUGUI textGameStatus;
+  public Button m_buttonSendCards;
   public CardSelect m_uiCardSelect;
   public CardList m_cardList;
-  public Button m_buttonSendCards;
   public SerializableDictionnary<Value, Sprite> SpritesValues;
   public SerializableDictionnary<Symbol, Sprite> SpritesSymbols;
-
+  
   void Awake()
   {
     if (Singleton == null) Singleton = this;
@@ -43,11 +44,6 @@ public class SceneData : MonoBehaviour
       m_cardList.m_cardListItems[i].m_imageSymbol.sprite = SpritesSymbols[0];
       m_cardList.m_cardListItems[i].m_imageValue.sprite = SpritesValues[0];
     }
-  }
-
-  public void SetTextLobbyPlayerCount(int count)
-  {
-    TextLobbyPlayerCount.text = $"Lobby Player Count: {count}";
   }
 }
 
@@ -79,9 +75,9 @@ public struct CardListItem
 
 
 [Serializable]
-public class SerializableDictionnary<TKey, TValue>
+public sealed class SerializableDictionnary<TKey, TValue>
 {
-  [Serializable] 
+  [Serializable]
   private class SerializableDictionnaryEntry
   {
     public SerializableDictionnaryEntry(TKey key, TValue value)
@@ -114,7 +110,7 @@ public class SerializableDictionnary<TKey, TValue>
       _entries.Add(new SerializableDictionnaryEntry(key, value));
     }
   }
-  
+
   public bool TryGetValue(TKey key, out TValue value)
   {
     return _dictionary.TryGetValue(key, out value);
