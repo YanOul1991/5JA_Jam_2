@@ -167,8 +167,8 @@ GameObject:
   - component: {fileID: 5994612006276993872}
   - component: {fileID: 3238915508259699498}
   - component: {fileID: 6748503170072679191}
-  - component: {fileID: 574457993224546100}
   - component: {fileID: 5639461962326669607}
+  - component: {fileID: 574457993224546100}
   - component: {fileID: 4583022068718129124}
   m_Layer: 0
   m_Name: CardPrefab
@@ -272,30 +272,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &574457993224546100
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3795025008873017019}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4990e28a30f54b4d9fa692de34ef71e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CardDisplay
-  frontFace: {fileID: 3685178027948303601}
-  backFace: {fileID: 2321614528423614305}
-  cardSymbol: {fileID: 6025054021869124345}
-  cardFigure: {fileID: 4060196023899117013}
-  AceSprite: {fileID: 21300000, guid: c5c600bb6612ce34fbb5b4ade3cd2d10, type: 3}
-  KingSprite: {fileID: 21300000, guid: 29edc38e04d550544acb85f14515ec0f, type: 3}
-  QueenSprite: {fileID: 21300000, guid: c352dfe455aafea468332f6f0b33612c, type: 3}
-  JackSprite: {fileID: 21300000, guid: 06b4391ab55303c4eaa75156ad8ed613, type: 3}
-  HeartSprite: {fileID: 21300000, guid: 53bf1a9fec08a6342ba651637b3bae2b, type: 3}
-  DiamondSprite: {fileID: 21300000, guid: a52a7643a06a8df4cae8f636120b76f2, type: 3}
-  SpadeSprite: {fileID: 21300000, guid: 96b88943f3d6e7e49a08c2cef82f2f0c, type: 3}
-  ClubSprite: {fileID: 21300000, guid: 19a21a23e3931754ebbc298774b15bf8, type: 3}
 --- !u!114 &5639461962326669607
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -308,7 +284,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 203769439
+  GlobalObjectIdHash: 3891560
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -321,6 +297,32 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
+--- !u!114 &574457993224546100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3795025008873017019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4990e28a30f54b4d9fa692de34ef71e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CardDisplay
+  ShowTopMostFoldoutHeaderGroup: 1
+  frontFace: {fileID: 3685178027948303601}
+  backFace: {fileID: 2321614528423614305}
+  cardSymbol: {fileID: 6025054021869124345}
+  cardFigure: {fileID: 4060196023899117013}
+  AceSprite: {fileID: 21300000, guid: c5c600bb6612ce34fbb5b4ade3cd2d10, type: 3}
+  KingSprite: {fileID: 21300000, guid: 29edc38e04d550544acb85f14515ec0f, type: 3}
+  QueenSprite: {fileID: 21300000, guid: c352dfe455aafea468332f6f0b33612c, type: 3}
+  JackSprite: {fileID: 21300000, guid: 06b4391ab55303c4eaa75156ad8ed613, type: 3}
+  HeartSprite: {fileID: 21300000, guid: 53bf1a9fec08a6342ba651637b3bae2b, type: 3}
+  DiamondSprite: {fileID: 21300000, guid: a52a7643a06a8df4cae8f636120b76f2, type: 3}
+  SpadeSprite: {fileID: 21300000, guid: 96b88943f3d6e7e49a08c2cef82f2f0c, type: 3}
+  ClubSprite: {fileID: 21300000, guid: 19a21a23e3931754ebbc298774b15bf8, type: 3}
+  isShown: 0
 --- !u!114 &4583022068718129124
 MonoBehaviour:
   m_ObjectHideFlags: 0

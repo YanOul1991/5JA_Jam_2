@@ -1,6 +1,7 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public class CardDisplay : MonoBehaviour
+public class CardDisplay : NetworkBehaviour
 {
     public GameObject frontFace; // The visible card front (text or image)
     public GameObject backFace;  // The card back
@@ -17,15 +18,28 @@ public class CardDisplay : MonoBehaviour
     public Sprite DiamondSprite;
     public Sprite SpadeSprite;
     public Sprite ClubSprite;
-
-    private Card currentCard;
+    
+    public Card currentCard;
+    public bool isShown;
 
     public void SetCard(Card card, bool isShown)
     {
         currentCard = card;
-        UpdateVisual(isShown);
+        this.isShown = isShown;
     }
 
+    [ClientRpc(AllowTargetOverride = true, Delivery = RpcDelivery.Reliable)]
+    public void NetUpdateCardDataClientRpc(Symbol symbol, Value value, bool isShown)
+    {
+        currentCard = new()
+        {
+            symbol = symbol,
+            value = value
+        };
+        this.isShown = isShown;
+        UpdateVisual(isShown);
+    }
+    
     public void UpdateVisual(bool isShown)
     {
         frontFace.SetActive(isShown);
