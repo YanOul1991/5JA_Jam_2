@@ -17,13 +17,16 @@ public enum ServerMessage : byte
 public class NetworkServer : NetworkBehaviour
 {
   static public NetworkServer Singleton;
-  private List<ulong> m_lConnectedClients;
-  private List<ulong> m_lClientWaitList;
-  private Dictionary<ulong, ulong> m_dClientsCardsData;
-  private Dictionary<ulong, int> m_dClientsPoints;
-  private List<byte> m_lPickedCards;
   private readonly NetworkMatchmaking m_matchmaking = new();
   private bool m_isMatchmakingRunning = false;
+
+  private List<ulong> m_lConnectedClients;
+  private List<ulong> m_lClientWaitList;
+  private List<byte> m_lPickedCards;
+
+  private Dictionary<ulong, ulong> m_dClientsCardsData;
+  private Dictionary<ulong, int> m_dClientsPoints;
+  private NetworkObject[] m_cardDisplay;
 
   private void Awake()
   {
@@ -90,6 +93,39 @@ public class NetworkServer : NetworkBehaviour
   private void RoundStart()
   {
     if (!IsServer) return;
+    
+    SceneData.Singleton.gameManager.GenerateCards();
+    
+    GameObject[] _generatedObjects = SceneData.Singleton.gameManager.DisplayAllCards();
+
+    m_cardDisplay = new NetworkObject[_generatedObjects.Length];
+
+    byte[] _allCards = new byte[SceneData.Singleton.gameManager.activeCards.Count];
+    for (int i = 0; i < _allCards.Length; i++)
+    {
+      _allCards[i] |= (byte)((byte)SceneData.Singleton.gameManager.activeCards[i].symbol << 4);
+      _allCards[i] |= (byte)SceneData.Singleton.gameManager.activeCards[i].value;
+    }
+
+    NetUpdateCardListsClientRpc(_allCards);
+
+    for (int i = 0; i < _generatedObjects.Length; i++)
+      m_cardDisplay[i] = _generatedObjects[i].GetComponent<NetworkObject>();
+
+    foreach (NetworkObject card in m_cardDisplay)
+      card.Spawn(true);
+
+    foreach (NetworkObject card in m_cardDisplay)
+    {
+      CardDisplay _cardDisplay = card.GetComponent<CardDisplay>();
+
+      _cardDisplay.NetUpdateCardDataClientRpc(
+        _cardDisplay.currentCard.symbol,
+        _cardDisplay.currentCard.value,
+        _cardDisplay.isShown
+      );
+    }
+
 
     m_dClientsCardsData = new Dictionary<ulong, ulong>();
     m_dClientsPoints = new Dictionary<ulong, int>();
@@ -99,7 +135,7 @@ public class NetworkServer : NetworkBehaviour
     foreach (ulong client in m_lConnectedClients)
       m_dClientsCardsData.Add(client, 0);
 
-    foreach (Card card in SceneData.Singleton.gameManager.activeCards)
+    foreach (Card card in SceneData.Singleton.gameManager.hiddenCards)
       m_lPickedCards.Add((byte)((byte)card.value | ((byte)card.symbol) << 4));
 
     NetSendMessageToClientRpc((byte)ServerMessage.GameStart);
@@ -197,6 +233,8 @@ public class NetworkServer : NetworkBehaviour
       case ServerMessage.ResultDraw:
         SceneData.Singleton.textGameStatus.gameObject.SetActive(true);
         SceneData.Singleton.textGameStatus.text = "Egualite! Recommence un nouveau round";
+        if (IsServer)
+          foreach (NetworkObject cardNetObj in m_cardDisplay) cardNetObj.Despawn(true);
         Invoke(nameof(RoundStart), 5.0f);
         return;
       case ServerMessage.Wait:
@@ -207,8 +245,26 @@ public class NetworkServer : NetworkBehaviour
     }
   }
 
+  [ClientRpc(Delivery = RpcDelivery.Reliable, AllowTargetOverride = true)]
+  private void NetUpdateCardListsClientRpc(byte[] cards)
+  {
+    List<Card> _updatedList = new List<Card>();
+
+    foreach (byte cardData in cards)
+    {
+      Card _cardObj = new Card();
+      _cardObj.value = (Value)(cardData & 0x0Ful);
+      _cardObj.symbol = (Symbol)((cardData & (0x0Ful << 4)) >> 4);
+
+      _updatedList.Add(_cardObj);
+    }
+
+    SceneData.Singleton.gameManager.activeCards = new List<Card>(_updatedList);
+  }
+
   private void GameEnd()
   {
+    foreach (NetworkObject cardNetObj in m_cardDisplay) cardNetObj.Despawn(true);
     NetworkManager.Singleton.Shutdown();
   }
 
@@ -236,7 +292,7 @@ public class NetworkServer : NetworkBehaviour
     }
     finally
     {
-      m_isMatchmakingRunning = false;      
+      m_isMatchmakingRunning = false;
     }
   }
 }

@@ -142,24 +142,25 @@ public class NetworkMatchmaking
       if (ticketStatusResponse.Type == typeof(MultiplayAssignment))
       {
         MultiplayAssignment assignment = ticketStatusResponse.Value as MultiplayAssignment;
-        return (assignment?.Status) switch
+        switch (assignment?.Status)
         {
-          MultiplayAssignment.StatusOptions.Found => ticketStatusResponse,
-          MultiplayAssignment.StatusOptions.Failed => throw new NetworkException(NetworkExceptionType.MultiplayFail, assignment.Message),
-          MultiplayAssignment.StatusOptions.Timeout => throw new NetworkException(NetworkExceptionType.MultiplayFail, assignment.Message),
-          _ => throw new NetworkException(NetworkExceptionType.MultiplayFail, assignment.Message),
-        };
+          case MultiplayAssignment.StatusOptions.Found: return ticketStatusResponse;
+          case MultiplayAssignment.StatusOptions.Failed: throw new NetworkException(NetworkExceptionType.MultiplayFail, assignment.Message);
+          case MultiplayAssignment.StatusOptions.Timeout: throw new NetworkException(NetworkExceptionType.MultiplayFail, assignment.Message);
+          default: break;
+        }
+        ;
       }
-
+      
       if (ticketStatusResponse.Type == typeof(MatchIdAssignment))
       {
         MatchIdAssignment assignment = ticketStatusResponse.Value as MatchIdAssignment;
-        return (assignment?.Status) switch
+        switch (assignment?.Status)
         {
-          MatchIdAssignment.StatusOptions.Found => ticketStatusResponse,
-          MatchIdAssignment.StatusOptions.Failed => throw new NetworkException(NetworkExceptionType.MultiplayFail, assignment.Message),
-          MatchIdAssignment.StatusOptions.Timeout => throw new NetworkException(NetworkExceptionType.MultiplayFail, assignment.Message),
-          _ => throw new NetworkException(NetworkExceptionType.MultiplayFail, assignment.Message)
+          case MatchIdAssignment.StatusOptions.Found: return ticketStatusResponse;
+          case MatchIdAssignment.StatusOptions.Failed: throw new NetworkException(NetworkExceptionType.MultiplayFail, assignment.Message);
+          case MatchIdAssignment.StatusOptions.Timeout: throw new NetworkException(NetworkExceptionType.MultiplayFail, assignment.Message);
+          default : break;
         };
       }
     }
@@ -260,7 +261,7 @@ public class NetworkMatchmaking
     {
       // Try to quick join an Existing Lobby
       int attempts = 0;
-      while (attempts < 10)
+      while (attempts < 5)
       {
         try
         {
@@ -271,7 +272,7 @@ public class NetworkMatchmaking
         catch
         {
           attempts++;
-          await Task.Delay(1000);
+          await Task.Delay(500);
         }
       }
 
