@@ -9,7 +9,9 @@ public class SceneData : MonoBehaviour
   static public SceneData Singleton;
   public GameManager gameManager;
   public TextMeshProUGUI textGameStatus;
-  public Button m_buttonSendCards;
+  public Button buttonStart;
+  public Button ButtonSendCards;
+  public Button ButtonQuitGame;
   public CardSelect m_uiCardSelect;
   public CardList m_cardList;
   public SerializableDictionnary<Value, Sprite> SpritesValues;
