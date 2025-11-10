@@ -60,6 +60,7 @@ public class NetworkPlayer : NetworkBehaviour
     sdata.textGameStatus.gameObject.SetActive(false);
 
     sdata.m_cardList.m_transParent.gameObject.SetActive(false);
+    SceneData.Singleton.GameObjIndices.SetActive(false);
 
     Debug.Log("Disconnected from server");
   }
@@ -74,6 +75,7 @@ public class NetworkPlayer : NetworkBehaviour
   public void OnRoundStart()
   {
     SceneData.Singleton.uiManager.ResetAllIndices();
+    SceneData.Singleton.GameObjIndices.SetActive(true);
 
     SceneData.Singleton.m_cardList.m_transParent.gameObject.SetActive(true);
 
@@ -107,6 +109,7 @@ public class NetworkPlayer : NetworkBehaviour
 
     SceneData.Singleton.m_cardList.m_transParent.gameObject.SetActive(false);
     SceneData.Singleton.m_uiCardSelect.m_mainObj.SetActive(false);
+    SceneData.Singleton.GameObjIndices.SetActive(false);
   }
 
   private void DisplayCardSelectionUi(bool _display)
