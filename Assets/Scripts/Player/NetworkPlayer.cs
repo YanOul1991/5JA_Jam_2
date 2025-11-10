@@ -73,6 +73,8 @@ public class NetworkPlayer : NetworkBehaviour
 
   public void OnRoundStart()
   {
+    SceneData.Singleton.uiManager.ResetAllIndices();
+
     SceneData.Singleton.m_cardList.m_transParent.gameObject.SetActive(true);
 
     for (int i = 0; i < SceneData.Singleton.m_cardList.m_cardListItems.Length; i++)

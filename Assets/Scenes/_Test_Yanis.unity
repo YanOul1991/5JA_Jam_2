@@ -739,7 +739,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7289775749967974643, guid: f906d9ceeac0df54987604703fa4b20a, type: 3}
   m_PrefabInstance: {fileID: 6779477197172841139}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 6779477197172841141}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b6d7b29875b86c842b32ebf2558a1a29, type: 3}
@@ -1883,6 +1883,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneData
   gameManager: {fileID: 898541089}
+  uiManager: {fileID: 483141516}
   textGameStatus: {fileID: 1410057114}
   buttonStart: {fileID: 935192594}
   ButtonSendCards: {fileID: 1629674224}
@@ -4441,9 +4442,37 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 443467335}
     - target: {fileID: 7289775749967974643, guid: f906d9ceeac0df54987604703fa4b20a, type: 3}
+      propertyPath: indicesOriginalRed
+      value: 
+      objectReference: {fileID: 21300000, guid: 6437583f2bb640b429d7e5dde1bef33d, type: 3}
+    - target: {fileID: 7289775749967974643, guid: f906d9ceeac0df54987604703fa4b20a, type: 3}
+      propertyPath: indicesOriginalAces
+      value: 
+      objectReference: {fileID: 21300000, guid: d6db1d9b0891f0441adb9a8a96ea08c5, type: 3}
+    - target: {fileID: 7289775749967974643, guid: f906d9ceeac0df54987604703fa4b20a, type: 3}
       propertyPath: indicesFiguresButton
       value: 
       objectReference: {fileID: 974066395}
+    - target: {fileID: 7289775749967974643, guid: f906d9ceeac0df54987604703fa4b20a, type: 3}
+      propertyPath: indicesOriginalBlack
+      value: 
+      objectReference: {fileID: 21300000, guid: 2229293e7670f1b4f84d3afd8152e738, type: 3}
+    - target: {fileID: 7289775749967974643, guid: f906d9ceeac0df54987604703fa4b20a, type: 3}
+      propertyPath: indicesOriginalClubs
+      value: 
+      objectReference: {fileID: 21300000, guid: 96a3e31c3be0c074183f347b31fa8392, type: 3}
+    - target: {fileID: 7289775749967974643, guid: f906d9ceeac0df54987604703fa4b20a, type: 3}
+      propertyPath: indicesOriginalHeart
+      value: 
+      objectReference: {fileID: 21300000, guid: 52c9d8f12f3da3841a3ba835e24397ad, type: 3}
+    - target: {fileID: 7289775749967974643, guid: f906d9ceeac0df54987604703fa4b20a, type: 3}
+      propertyPath: indicesOriginalJacks
+      value: 
+      objectReference: {fileID: 21300000, guid: 24663c2b166a51e4ea939a057f92cf86, type: 3}
+    - target: {fileID: 7289775749967974643, guid: f906d9ceeac0df54987604703fa4b20a, type: 3}
+      propertyPath: indicesOriginalKings
+      value: 
+      objectReference: {fileID: 21300000, guid: 11a0020b2e21dba4ebc3dffebc945256, type: 3}
     - target: {fileID: 7289775749967974643, guid: f906d9ceeac0df54987604703fa4b20a, type: 3}
       propertyPath: indicesResultRedText
       value: 
@@ -4452,6 +4481,14 @@ PrefabInstance:
       propertyPath: indicesCouleursButton
       value: 
       objectReference: {fileID: 2077109486}
+    - target: {fileID: 7289775749967974643, guid: f906d9ceeac0df54987604703fa4b20a, type: 3}
+      propertyPath: indicesOriginalQueens
+      value: 
+      objectReference: {fileID: 21300000, guid: ab3158fa58b071343a036eb29e79c37c, type: 3}
+    - target: {fileID: 7289775749967974643, guid: f906d9ceeac0df54987604703fa4b20a, type: 3}
+      propertyPath: indicesOriginalSpades
+      value: 
+      objectReference: {fileID: 21300000, guid: 0d0d83ea199278d4ebb05c61ceb2bb03, type: 3}
     - target: {fileID: 7289775749967974643, guid: f906d9ceeac0df54987604703fa4b20a, type: 3}
       propertyPath: indicesResultAcesText
       value: 
@@ -4485,6 +4522,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1819297460}
     - target: {fileID: 7289775749967974643, guid: f906d9ceeac0df54987604703fa4b20a, type: 3}
+      propertyPath: indicesOriginalDiamonds
+      value: 
+      objectReference: {fileID: 21300000, guid: 36ebdb0efcc58b1429d2389b329bbeec, type: 3}
+    - target: {fileID: 7289775749967974643, guid: f906d9ceeac0df54987604703fa4b20a, type: 3}
       propertyPath: indicesResultHeartsText
       value: 
       objectReference: {fileID: 802144094}
@@ -4507,13 +4548,46 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3813920257689269246, guid: f906d9ceeac0df54987604703fa4b20a, type: 3}
+      insertIndex: 1
+      addedObject: {fileID: 6779477197172841142}
   m_SourcePrefab: {fileID: 100100000, guid: f906d9ceeac0df54987604703fa4b20a, type: 3}
 --- !u!4 &6779477197172841140 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 220481204455948332, guid: f906d9ceeac0df54987604703fa4b20a, type: 3}
   m_PrefabInstance: {fileID: 6779477197172841139}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &6779477197172841141 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3813920257689269246, guid: f906d9ceeac0df54987604703fa4b20a, type: 3}
+  m_PrefabInstance: {fileID: 6779477197172841139}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6779477197172841142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6779477197172841141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 241112822
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 0
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!1001 &7963966793861956761
 PrefabInstance:
   m_ObjectHideFlags: 0
