@@ -3,9 +3,12 @@ using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.EventSystems;
 using TMPro;
+using Unity.Netcode;
 
-public class UIManager : MonoBehaviour
+public class UIManager : NetworkBehaviour
 {
+    static public UIManager Singleton;
+
     [Header("Bouton Popup Indices")]
     public GameObject indices;
     public TMP_Text nombreIndicesRestantsPopup;
@@ -72,6 +75,23 @@ public class UIManager : MonoBehaviour
     [Header("Close options")]
     public GameObject closeIndicesBackground;
     public GameObject closeIndicesButton;
+
+    [Header("Sprites Original Indices Figures")]
+    public Sprite indicesOriginalAces;
+    public Sprite indicesOriginalKings;
+    public Sprite indicesOriginalQueens;
+    public Sprite indicesOriginalJacks;
+
+    [Header("Sprites Original Indices Symbol")]
+    public Sprite indicesOriginalHeart;
+    public Sprite indicesOriginalDiamonds;
+    public Sprite indicesOriginalSpades;
+    public Sprite indicesOriginalClubs;
+
+    [Header("Sprites Original Indices Couleur")]
+    public Sprite indicesOriginalRed;
+    public Sprite indicesOriginalBlack;
+
 
     public QuestionManager questionManager;
 
@@ -238,5 +258,77 @@ public class UIManager : MonoBehaviour
         LockButton(indiceKing, indicesLockedSmallSprite);
         LockButton(indiceQueens, indicesLockedSmallSprite);
         LockButton(indiceJacks, indicesLockedSmallSprite);
+    }
+
+    public void ResetAllIndices()
+    {
+        // Reset number of hints
+        nombreIndicesRestantsInt = 3;
+        nombreIndicesRestantsPopup.text = nombreIndicesRestantsInt.ToString();
+        nombreIndicesRestants.text = nombreIndicesRestantsInt.ToString();
+
+        // Hide all result texts
+        indicesResultAcesText.SetActive(false);
+        indicesResultKingsText.SetActive(false);
+        indicesResultQueensText.SetActive(false);
+        indicesResultJacksText.SetActive(false);
+
+        indicesResultHeartsText.SetActive(false);
+        indicesResultDiamondsText.SetActive(false);
+        indicesResultSpadesText.SetActive(false);
+        indicesResultClubsText.SetActive(false);
+
+        indicesResultRedText.SetActive(false);
+        indicesResultBlackText.SetActive(false);
+
+        // Reactivate all buttons
+
+        //ResetButton(indicesCouleursButton);
+        //ResetButton(indicesSymbolesButton);
+        //ResetButton(indicesFiguresButton);
+
+        // Re-enable all individual indice buttons
+        ResetButton(indicesRed, indicesOriginalRed);
+        ResetButton(indicesBlack, indicesOriginalBlack);
+        ResetButton(indicesHearts, indicesOriginalHeart);
+        ResetButton(indiceDiamonds, indicesOriginalDiamonds);
+        ResetButton(indiceSpades, indicesOriginalSpades);
+        ResetButton(indiceClubs, indicesOriginalClubs);
+        ResetButton(indicesAces, indicesOriginalAces);
+        ResetButton(indiceKing, indicesOriginalKings);
+        ResetButton(indiceQueens, indicesOriginalQueens);
+        ResetButton(indiceJacks, indicesOriginalJacks);
+
+        // Hide all indice subcategories
+        indicesRed.SetActive(false);
+        indicesBlack.SetActive(false);
+        indicesHearts.SetActive(false);
+        indiceDiamonds.SetActive(false);
+        indiceSpades.SetActive(false);
+        indiceClubs.SetActive(false);
+        indicesAces.SetActive(false);
+        indiceKing.SetActive(false);
+        indiceQueens.SetActive(false);
+        indiceJacks.SetActive(false);
+
+        // Show main indice buttons
+        indicesCouleursButton.SetActive(true);
+        indicesSymbolesButton.SetActive(true);
+        indicesFiguresButton.SetActive(true);
+    }
+
+    // Helper to re-enable button and restore default sprite
+    private void ResetButton(GameObject buttonObj, Sprite resetImage)
+    {
+        if (buttonObj == null) return;
+
+        Button btn = buttonObj.GetComponent<Button>();
+        if (btn != null) btn.interactable = true;
+
+        Image img = buttonObj.GetComponent<Image>();
+        if (img != null)
+        {   
+            img.sprite = resetImage;
+        }
     }
 }
