@@ -9,6 +9,7 @@ public class SceneData : MonoBehaviour
   static public SceneData Singleton;
   public GameManager gameManager;
   public UIManager uiManager;
+  public GameObject GameObjIndices;
   public TextMeshProUGUI textGameStatus;
   public Button buttonStart;
   public Button ButtonSendCards;
