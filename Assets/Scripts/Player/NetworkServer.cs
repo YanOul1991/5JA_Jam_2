@@ -74,7 +74,7 @@ public class NetworkServer : NetworkBehaviour
     {
       m_lConnectedClients.Add(id);
 
-      if (m_lConnectedClients.Count >= 2)
+      if (m_lConnectedClients.Count >= 4)
       {
         SceneData.Singleton.textGameStatus.gameObject.SetActive(false);
         NetSendMessageToClientRpc((byte)ServerMessage.GameStart);
